@@ -5,13 +5,15 @@ This is a demo for a chat agent that answers questions based on documents, using
 
 # Usage
 
-Create `openai_api_key.txt` in project root with your [OpenAI API key](https://platform.openai.com/account/api-keys). Run `chmod 600 openai_api_key.txt` to limit access.
+Create `openai_api_key.txt` in project root with your [OpenAI API key](https://platform.openai.com/account/api-keys). To limit access:
+
+    chmod 600 openai_api_key.txt
 
 Install requirements:
 
     pip install -r requirements.txt
 
-Populate the document list in `documents.txt`. For example, to get urls of www.example.com, run:
+Populate the document list in `documents.txt`. For example, to get urls of www.example.com:
 
     wget -m www.example.com 2>&1 | grep -o "www.example.com/.*"
 
