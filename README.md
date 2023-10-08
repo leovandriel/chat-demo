@@ -29,6 +29,15 @@ To run local Streamlit app:
 
     streamlit run src/app.py
 
+To export vector store:
+
+    sqlite3 data/chroma.sqlite3 .dump > vector.sql
+
+To import vector store:
+
+    rm data/chroma.sqlite3
+    cat vector.sql | sqlite3 data/chroma.sqlite3
+
 # License
 
 MIT
