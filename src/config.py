@@ -20,7 +20,11 @@ Use the following information to answer the question at the end.
 If you don't know the answer, just say that you don't know without providing a reason. Don't try to make up an answer.
 Use up to three paragraphs to answer the question. Be as concise as possible.
 Provide one titled link to the most relevant source of your answer at the bottom if possible.
+
 {context}
+
 Question: {question}
 Helpful Answer in markdown syntax:
 """.strip()
+
+document_template = 'Title: {title}\nContent: {page_content}\nSource: {source}'
