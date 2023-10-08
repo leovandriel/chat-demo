@@ -9,7 +9,7 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from config import data_dir, model_name, agent_skill, prompt_template, document_template
 
-openai_key_file = 'openai_api_key.txt'
+openai_key_file = "openai_api_key.txt"
 
 
 def openai_key():
@@ -18,7 +18,8 @@ def openai_key():
             return f.read().strip()
     else:
         raise Exception(
-            f'Please create a file called {openai_key_file} with your OpenAI API key in it.')
+            f"Please create a file called {openai_key_file} with your OpenAI API key in it."
+        )
 
 
 class StreamHandler(BaseCallbackHandler):
@@ -49,13 +50,12 @@ def setup_chain(vectorstore, streaming):
 
     memory = ConversationSummaryBufferMemory(
         llm=internal_llm,
-        memory_key='chat_history',
+        memory_key="chat_history",
         return_messages=True,
-        output_key='answer',
+        output_key="answer",
     )
 
-    prompt = PromptTemplate.from_template(
-        "\n".join([agent_skill, prompt_template]))
+    prompt = PromptTemplate.from_template("\n".join([agent_skill, prompt_template]))
     document_prompt = PromptTemplate.from_template(document_template)
     handler = StreamHandler()
 
@@ -73,12 +73,14 @@ def setup_chain(vectorstore, streaming):
         retriever=retriever,
         memory=memory,
         return_source_documents=True,
-        combine_docs_chain_kwargs={'prompt': prompt,
-                                   'document_prompt': document_prompt},
+        combine_docs_chain_kwargs={
+            "prompt": prompt,
+            "document_prompt": document_prompt,
+        },
     )
 
     def run(question, callback=None):
         handler.callback = callback
-        return chain({'question': question})['answer']
+        return chain({"question": question})["answer"]
 
     return run

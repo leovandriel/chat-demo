@@ -1,18 +1,17 @@
-
 # Where to store the Choma document embeddings
-data_dir = './data'
+data_dir = "./data"
 
 # The OpenAI LLM model to use
-model_name = 'gpt-3.5-turbo'
+model_name = "gpt-3.5-turbo"
 
 # Title tile/name shown in the chat window
-agent_name = 'Paul Graham'
+agent_name = "Paul Graham"
 
 # Skill description used for prompting
-agent_skill = 'You are an expert programmer, entrepreneur, and investor.'
+agent_skill = "You are an expert programmer, entrepreneur, and investor."
 
 # The initial prompt by the agent
-title_prompt = 'How can I help you?'
+title_prompt = "How can I help you?"
 
 # The LLM prompt used for agent response to user input
 prompt_template = """
@@ -27,4 +26,4 @@ Question: {question}
 Helpful Answer in markdown syntax:
 """.strip()
 
-document_template = 'Title: {title}\nContent: {page_content}\nSource: {source}'
+document_template = "Title: {title}\nContent: {page_content}\nSource: {source}"
