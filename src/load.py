@@ -4,7 +4,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from config import data_dir
-from util import openai_key
+from util import get_secret
 
 chroma_file = f"{data_dir}/chroma.sqlite3"
 
@@ -20,7 +20,7 @@ def load():
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=10)
     documents = splitter.split_documents(data)
 
-    embedder = OpenAIEmbeddings(openai_api_key=openai_key())
+    embedder = OpenAIEmbeddings(openai_api_key=get_secret("openai_api_key"))
 
     if os.path.exists(chroma_file):
         os.remove(chroma_file)

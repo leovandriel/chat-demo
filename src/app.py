@@ -1,5 +1,6 @@
 import streamlit as st
-from ask import load_store, setup_chain, agent_name, title_prompt
+from ask import agent_name, title_prompt
+from util import load_store, setup_chain
 
 st.set_page_config(page_title=agent_name, page_icon="🧠")
 
@@ -11,20 +12,26 @@ def loading():
     return load_store()
 
 
+def add_message(role, content):
+    st.session_state.messages.append({"role": role, "content": content})
+
+
 if "chain" not in st.session_state:
     store = loading()
     chain = setup_chain(store, streaming=True)
-    st.session_state["chain"] = chain
+    st.session_state.chain = chain
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": title_prompt}]
+    st.session_state.messages = []
+    add_message("assistant", title_prompt)
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 if question := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": question})
+    add_message("user", question)
+
     with st.chat_message("user"):
         st.markdown(question)
     with st.chat_message("assistant"):
@@ -36,7 +43,7 @@ if question := st.chat_input():
             answer += token
             message_placeholder.markdown(answer)
 
-        chain = st.session_state["chain"]
+        chain = st.session_state.chain
         answer = chain(question, add_token)
         message_placeholder.markdown(answer)
-    st.session_state.messages.append({"role": "assistant", "content": answer})
+    add_message("assistant", answer)

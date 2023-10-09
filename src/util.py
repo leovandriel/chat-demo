@@ -9,16 +9,15 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from config import data_dir, model_name, agent_skill, prompt_template, document_template
 
-openai_key_file = "openai_api_key.txt"
 
-
-def openai_key():
-    if os.path.isfile(openai_key_file):
-        with open(openai_key_file) as f:
+def get_secret(key):
+    filename = f"{key}.txt"
+    if os.path.isfile(filename):
+        with open(filename) as f:
             return f.read().strip()
     else:
         raise Exception(
-            f"Please create a file called {openai_key_file} with your OpenAI API key in it."
+            f"Unable to find {key}.txt. Please create this file and add your secret."
         )
 
 
@@ -31,7 +30,7 @@ class StreamHandler(BaseCallbackHandler):
 
 
 def load_store():
-    embedder = OpenAIEmbeddings(openai_api_key=openai_key())
+    embedder = OpenAIEmbeddings(openai_api_key=get_secret("openai_api_key"))
     vectorstore = Chroma(
         embedding_function=embedder,
         persist_directory=data_dir,
@@ -45,7 +44,7 @@ def setup_chain(vectorstore, streaming):
     internal_llm = ChatOpenAI(
         model_name=model_name,
         temperature=0,
-        openai_api_key=openai_key(),
+        openai_api_key=get_secret("openai_api_key"),
     )
 
     memory = ConversationSummaryBufferMemory(
@@ -62,7 +61,7 @@ def setup_chain(vectorstore, streaming):
     response_llm = ChatOpenAI(
         model_name=model_name,
         temperature=0,
-        openai_api_key=openai_key(),
+        openai_api_key=get_secret("openai_api_key"),
         streaming=streaming,
         callbacks=[handler] if handler else [],
     )
