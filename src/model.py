@@ -19,10 +19,6 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from config import (
     data_dir,
-    chat_llm_vendor,
-    embed_llm_vendor,
-    chat_model_name,
-    embed_model_name,
     agent_skill,
     prompt_template,
     document_template,
@@ -30,41 +26,46 @@ from config import (
 from util import get_secret
 
 
-def create_llm(streaming=False, handler=None):
-    if chat_llm_vendor == "openai":
+def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
+    if vendor == "openai":
         return ChatOpenAI(
-            model_name=chat_model_name,
+            model_name=model,
+            temperature=temperature,
             openai_api_key=get_secret("openai_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
-    elif chat_llm_vendor == "cohere":
+    elif vendor == "cohere":
         return ChatCohere(
-            model_name=chat_model_name,
+            model_name=model,
+            temperature=temperature,
             cohere_api_key=get_secret("cohere_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
-    elif chat_llm_vendor == "anthropic":
+    elif vendor == "anthropic":
         return ChatAnthropic(
-            model=chat_model_name,
+            model=model,
+            temperature=temperature,
             anthropic_api_key=get_secret("anthropic_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
-    elif chat_llm_vendor == "google":
+    elif vendor == "google":
         return ChatGooglePalm(
-            model=chat_model_name,
+            model=model,
+            temperature=temperature,
             google_api_key=get_secret("google_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
-    elif chat_llm_vendor == "vertex":
+    elif vendor == "vertex":
         from google.oauth2.service_account import Credentials
 
         info = json.loads(get_secret("vertex_api_key"))
         return ChatVertexAI(
-            model=chat_model_name,
+            model=model,
+            temperature=temperature,
             credentials=Credentials.from_service_account_info(info),
             project=info["project_id"],
             streaming=streaming,
@@ -72,35 +73,35 @@ def create_llm(streaming=False, handler=None):
         )
 
 
-def create_embedder():
-    if embed_llm_vendor == "openai":
+def create_embedder(vendor, model):
+    if vendor == "openai":
         return OpenAIEmbeddings(
-            model=embed_model_name,
+            model=model,
             openai_api_key=get_secret("openai_api_key"),
         )
-    elif embed_llm_vendor == "cohere":
+    elif vendor == "cohere":
         return CohereEmbeddings(
-            model=embed_model_name,
+            model=model,
             cohere_api_key=get_secret("cohere_api_key"),
         )
-    elif embed_llm_vendor == "google":
+    elif vendor == "google":
         return GooglePalmEmbeddings(
-            model_name=embed_model_name,
+            model_name=model,
             google_api_key=get_secret("google_api_key"),
         )
-    elif embed_llm_vendor == "vertex":
+    elif vendor == "vertex":
         from google.oauth2.service_account import Credentials
 
         info = json.loads(get_secret("vertex_api_key"))
         return VertexAIEmbeddings(
-            model_name=embed_model_name,
+            model_name=model,
             credentials=Credentials.from_service_account_info(info),
             project=info["project_id"],
         )
 
 
 def load_store():
-    embedder = create_embedder()
+    embedder = create_embedder(vendor="openai", model="text-embedding-ada-002")
     vectorstore = Chroma(
         embedding_function=embedder,
         persist_directory=data_dir,
@@ -119,7 +120,7 @@ class StreamHandler(BaseCallbackHandler):
 def setup_chain(vectorstore, streaming):
     retriever = vectorstore.as_retriever()
 
-    internal_llm = create_llm()
+    internal_llm = create_llm(vendor="openai", model="gpt-3.5-turbo", temperature=0.2)
 
     memory = ConversationSummaryBufferMemory(
         llm=internal_llm,
@@ -132,7 +133,13 @@ def setup_chain(vectorstore, streaming):
     document_prompt = PromptTemplate.from_template(document_template)
     handler = StreamHandler()
 
-    response_llm = create_llm(streaming=streaming, handler=handler)
+    response_llm = create_llm(
+        vendor="openai",
+        model="gpt-3.5-turbo",
+        temperature=0.5,
+        streaming=streaming,
+        handler=handler,
+    )
 
     chain = ConversationalRetrievalChain.from_llm(
         response_llm,

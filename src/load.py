@@ -26,7 +26,7 @@ def load():
     documents = splitter.split_documents(data)
 
     print(f"embedding {len(documents)} chunks")
-    embedder = create_embedder()
+    embedder = create_embedder(vendor="openai", model="text-embedding-ada-002")
     if os.path.exists(chroma_file):
         os.remove(chroma_file)
     vectorstore = Chroma.from_documents(
