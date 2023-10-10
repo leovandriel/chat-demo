@@ -1,11 +1,11 @@
 # Where to store the Choma document embeddings
 data_dir = "./data"
 
-# The LLM vendor to use (openai, cohere, anthropic)
+# The LLM vendor to use (openai, cohere, anthropic, google, vertex)
 embed_llm_vendor = "openai"
 chat_llm_vendor = "openai"
 
-# The LLM model to use (e.g. gpt-3.5-turbo, text-embedding-ada-002, command, embed-english-v2.0)
+# The LLM model to use (e.g. gpt-3.5-turbo, text-embedding-ada-002)
 embed_model_name = "text-embedding-ada-002"
 chat_model_name = "gpt-3.5-turbo"
 

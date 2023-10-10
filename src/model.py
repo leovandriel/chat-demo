@@ -1,10 +1,18 @@
+import json
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import ChatOpenAI, ChatCohere, ChatAnthropic, ChatGooglePalm
+from langchain.chat_models import (
+    ChatOpenAI,
+    ChatCohere,
+    ChatAnthropic,
+    ChatGooglePalm,
+    ChatVertexAI,
+)
 from langchain.embeddings import (
     OpenAIEmbeddings,
     CohereEmbeddings,
     GooglePalmEmbeddings,
+    VertexAIEmbeddings,
 )
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.prompts import PromptTemplate
@@ -55,6 +63,18 @@ def create_llm(streaming=False, handler=None):
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
+    elif chat_llm_vendor == "vertex":
+        from google.oauth2.service_account import Credentials
+
+        info = json.loads(get_secret("vertex_api_key"))
+        return ChatVertexAI(
+            model=chat_model_name,
+            temperature=0,
+            credentials=Credentials.from_service_account_info(info),
+            project=info["project_id"],
+            streaming=streaming,
+            callbacks=[handler] if handler else [],
+        )
 
 
 def create_embedder():
@@ -72,6 +92,15 @@ def create_embedder():
         return GooglePalmEmbeddings(
             model_name=embed_model_name,
             google_api_key=get_secret("google_api_key"),
+        )
+    elif embed_llm_vendor == "vertex":
+        from google.oauth2.service_account import Credentials
+
+        info = json.loads(get_secret("vertex_api_key"))
+        return VertexAIEmbeddings(
+            model_name=embed_model_name,
+            credentials=Credentials.from_service_account_info(info),
+            project=info["project_id"],
         )
 
 

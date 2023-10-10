@@ -1,7 +1,7 @@
 Chat Demo
 =========
 
-This is a demo for a chat agent that answers questions based on documents, using document embeddings (Chroma) and an LLM (LangChain), and supporting multiple LLM APIs (OpenAI, Cohere, Anthropic, Google Palm)
+This is a demo for a chat agent that answers questions based on documents, using document embeddings (Chroma) and an LLM (LangChain), and supporting multiple LLM APIs (OpenAI, Cohere, Anthropic, Google Palm, VertexAI)
 
 # Usage
 
@@ -15,6 +15,7 @@ Depending on the LLM API you use, store API keys and limit access:
     chmod 600 cohere_api_key.txt
     chmod 600 anthropic_api_key.txt
     chmod 600 google_api_key.txt
+    chmod 600 vertex_api_key.txt
 
 Populate the document list in `documents.txt`. For example, to get urls of www.example.com:
 

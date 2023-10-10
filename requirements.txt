@@ -1,6 +1,8 @@
 beautifulsoup4
 chromadb
 cohere
+google-cloud-aiplatform
+google-generativeai
 langchain
 openai
 streamlit
