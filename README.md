@@ -1,17 +1,18 @@
 Chat Demo
 =========
 
-This is a demo for a chat agent that answers questions based on documents, using document embeddings (Chroma) and an LLM (LangChain, OpenAI).
+This is a demo for a chat agent that answers questions based on documents, using document embeddings (Chroma) and an LLM (LangChain), and supporting multiple LLM APIs (OpenAI, Cohere)
 
 # Usage
-
-Create `openai_api_key.txt` in project root with your [OpenAI API key](https://platform.openai.com/account/api-keys). To limit access:
-
-    chmod 600 openai_api_key.txt
 
 Install requirements:
 
     pip install -r requirements.txt
+
+Depending on the LLM API you use, store API keys and limit access:
+
+    chmod 600 openai_api_key.txt
+    chmod 600 cohere_api_key.txt
 
 Populate the document list in `documents.txt`. For example, to get urls of www.example.com:
 

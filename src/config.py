@@ -1,8 +1,11 @@
 # Where to store the Choma document embeddings
 data_dir = "./data"
 
-# The OpenAI LLM model to use
-model_name = "gpt-3.5-turbo"
+# The LLM vendor to use (openai, cohere)
+llm_vendor = "cohere"
+
+# The LLM model to use (gpt-3.5-turbo, command)
+model_name = "command"
 
 # Title tile/name shown in the chat window
 agent_name = "Paul Graham"
