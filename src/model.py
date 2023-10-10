@@ -1,14 +1,16 @@
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import ChatOpenAI, ChatCohere
+from langchain.chat_models import ChatOpenAI, ChatCohere, ChatAnthropic
 from langchain.embeddings import OpenAIEmbeddings, CohereEmbeddings
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from config import (
     data_dir,
-    llm_vendor,
-    model_name,
+    embed_llm_vendor,
+    chat_llm_vendor,
+    embed_model_name,
+    chat_model_name,
     agent_skill,
     prompt_template,
     document_template,
@@ -17,29 +19,43 @@ from util import get_secret
 
 
 def create_llm(streaming=False, handler=None):
-    if llm_vendor == "openai":
+    if chat_llm_vendor == "openai":
         return ChatOpenAI(
-            model_name=model_name,
+            model_name=chat_model_name,
             temperature=0,
             openai_api_key=get_secret("openai_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
-    elif llm_vendor == "cohere":
+    elif chat_llm_vendor == "cohere":
         return ChatCohere(
-            model_name=model_name,
+            model_name=chat_model_name,
             temperature=0,
             cohere_api_key=get_secret("cohere_api_key"),
+            streaming=streaming,
+            callbacks=[handler] if handler else [],
+        )
+    elif chat_llm_vendor == "anthropic":
+        return ChatAnthropic(
+            model=chat_model_name,
+            temperature=0,
+            anthropic_api_key=get_secret("anthropic_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
 
 
 def create_embedder():
-    if llm_vendor == "openai":
-        return OpenAIEmbeddings(openai_api_key=get_secret("openai_api_key"))
-    elif llm_vendor == "cohere":
-        return CohereEmbeddings(cohere_api_key=get_secret("cohere_api_key"))
+    if embed_llm_vendor == "openai":
+        return OpenAIEmbeddings(
+            model=embed_model_name,
+            openai_api_key=get_secret("openai_api_key"),
+        )
+    elif embed_llm_vendor == "cohere":
+        return CohereEmbeddings(
+            model=embed_model_name,
+            cohere_api_key=get_secret("cohere_api_key"),
+        )
 
 
 def load_store():
