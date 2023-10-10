@@ -1,6 +1,6 @@
 import streamlit as st
 from ask import agent_name, title_prompt
-from util import load_store, setup_chain
+from model import load_store, setup_chain
 
 st.set_page_config(page_title=agent_name, page_icon="🧠")
 

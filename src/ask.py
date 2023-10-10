@@ -1,6 +1,6 @@
 from langchain.callbacks import get_openai_callback
 from config import title_prompt, agent_name
-from util import load_store, setup_chain
+from model import load_store, setup_chain
 
 print_cost = True
 
