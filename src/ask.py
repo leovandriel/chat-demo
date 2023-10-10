@@ -1,4 +1,3 @@
-from langchain.callbacks import get_openai_callback
 from config import title_prompt, agent_name
 from model import load_store, setup_chain
 
@@ -15,12 +14,8 @@ def ask():
         question = input("You: ")
         if len(question) == 0:
             break
-        with get_openai_callback() as callback:
-            answer = chain(question)
-            cost = callback.total_cost
+        answer = chain(question)
         print(f"\n{agent_name}: {answer}\n")
-        if print_cost:
-            print(f"Cost: ${cost:.3f}\n")
 
 
 if __name__ == "__main__":
