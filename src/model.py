@@ -19,10 +19,10 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 from config import (
     data_dir,
-    embed_llm_vendor,
     chat_llm_vendor,
-    embed_model_name,
+    embed_llm_vendor,
     chat_model_name,
+    embed_model_name,
     agent_skill,
     prompt_template,
     document_template,
@@ -34,7 +34,6 @@ def create_llm(streaming=False, handler=None):
     if chat_llm_vendor == "openai":
         return ChatOpenAI(
             model_name=chat_model_name,
-            temperature=0,
             openai_api_key=get_secret("openai_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
@@ -42,7 +41,6 @@ def create_llm(streaming=False, handler=None):
     elif chat_llm_vendor == "cohere":
         return ChatCohere(
             model_name=chat_model_name,
-            temperature=0,
             cohere_api_key=get_secret("cohere_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
@@ -50,7 +48,6 @@ def create_llm(streaming=False, handler=None):
     elif chat_llm_vendor == "anthropic":
         return ChatAnthropic(
             model=chat_model_name,
-            temperature=0,
             anthropic_api_key=get_secret("anthropic_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
@@ -58,7 +55,6 @@ def create_llm(streaming=False, handler=None):
     elif chat_llm_vendor == "google":
         return ChatGooglePalm(
             model=chat_model_name,
-            temperature=0,
             google_api_key=get_secret("google_api_key"),
             streaming=streaming,
             callbacks=[handler] if handler else [],
@@ -69,7 +65,6 @@ def create_llm(streaming=False, handler=None):
         info = json.loads(get_secret("vertex_api_key"))
         return ChatVertexAI(
             model=chat_model_name,
-            temperature=0,
             credentials=Credentials.from_service_account_info(info),
             project=info["project_id"],
             streaming=streaming,
