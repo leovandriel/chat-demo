@@ -1,7 +1,11 @@
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import ChatOpenAI, ChatCohere, ChatAnthropic
-from langchain.embeddings import OpenAIEmbeddings, CohereEmbeddings
+from langchain.chat_models import ChatOpenAI, ChatCohere, ChatAnthropic, ChatGooglePalm
+from langchain.embeddings import (
+    OpenAIEmbeddings,
+    CohereEmbeddings,
+    GooglePalmEmbeddings,
+)
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
@@ -43,6 +47,14 @@ def create_llm(streaming=False, handler=None):
             streaming=streaming,
             callbacks=[handler] if handler else [],
         )
+    elif chat_llm_vendor == "google":
+        return ChatGooglePalm(
+            model=chat_model_name,
+            temperature=0,
+            google_api_key=get_secret("google_api_key"),
+            streaming=streaming,
+            callbacks=[handler] if handler else [],
+        )
 
 
 def create_embedder():
@@ -55,6 +67,11 @@ def create_embedder():
         return CohereEmbeddings(
             model=embed_model_name,
             cohere_api_key=get_secret("cohere_api_key"),
+        )
+    elif embed_llm_vendor == "google":
+        return GooglePalmEmbeddings(
+            model_name=embed_model_name,
+            google_api_key=get_secret("google_api_key"),
         )
 
 
