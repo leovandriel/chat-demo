@@ -16,24 +16,24 @@ def load():
 
     print(f"loading {len(urls)} documents")
     loader = WebBaseLoader(urls)
-    data = loader.load()
+    docs = loader.load()
     enc = tiktoken.get_encoding("cl100k_base")
-    tokens = sum(len(enc.encode(doc.page_content)) for doc in data)
-    characters = sum(len(doc.page_content) for doc in data)
-    for doc in data:
-        if len(doc.page_content) < 1000:
+    tokens = sum(len(enc.encode(doc.page_content)) for doc in docs)
+    characters = sum(len(doc.page_content) for doc in docs)
+    for doc in docs:
+        if len(doc.page_content) < 10:
             raise Exception(f"Empty doc: {doc}")
 
     print(f"splitting {tokens} tokens ({characters} chars)")
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
-    documents = splitter.split_documents(data)
+    chunks = splitter.split_documents(docs)
 
-    print(f"embedding {len(documents)} chunks")
+    print(f"embedding {len(chunks)} chunks")
     embedder = create_embedder(vendor="openai", model="text-embedding-ada-002")
     if os.path.exists(chroma_file):
         os.remove(chroma_file)
     vectorstore = Chroma.from_documents(
-        documents=documents, embedding=embedder, persist_directory=data_dir
+        documents=chunks, embedding=embedder, persist_directory=data_dir
     )
 
     print(f"saving to {chroma_file}")
