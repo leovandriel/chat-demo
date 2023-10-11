@@ -26,14 +26,14 @@ from config import (
 from util import get_secret
 
 
-def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
+def create_llm(vendor, model, temperature=0.5, streaming=False, callbacks=None):
     if vendor == "openai":
         return ChatOpenAI(
             model_name=model,
             temperature=temperature,
             openai_api_key=get_secret("openai_api_key"),
             streaming=streaming,
-            callbacks=[handler] if handler else [],
+            callbacks=callbacks,
         )
     elif vendor == "cohere":
         return ChatCohere(
@@ -41,7 +41,7 @@ def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
             temperature=temperature,
             cohere_api_key=get_secret("cohere_api_key"),
             streaming=streaming,
-            callbacks=[handler] if handler else [],
+            callbacks=callbacks,
         )
     elif vendor == "anthropic":
         return ChatAnthropic(
@@ -49,7 +49,7 @@ def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
             temperature=temperature,
             anthropic_api_key=get_secret("anthropic_api_key"),
             streaming=streaming,
-            callbacks=[handler] if handler else [],
+            callbacks=callbacks,
         )
     elif vendor == "google":
         return ChatGooglePalm(
@@ -57,7 +57,7 @@ def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
             temperature=temperature,
             google_api_key=get_secret("google_api_key"),
             streaming=streaming,
-            callbacks=[handler] if handler else [],
+            callbacks=callbacks,
         )
     elif vendor == "vertex":
         from google.oauth2.service_account import Credentials
@@ -69,7 +69,7 @@ def create_llm(vendor, model, temperature=0.5, streaming=False, handler=None):
             credentials=Credentials.from_service_account_info(info),
             project=info["project_id"],
             streaming=streaming,
-            callbacks=[handler] if handler else [],
+            callbacks=callbacks,
         )
 
 
@@ -138,7 +138,7 @@ def setup_chain(vectorstore, streaming):
         model="gpt-3.5-turbo",
         temperature=0.5,
         streaming=streaming,
-        handler=handler,
+        callbacks=[handler],
     )
 
     chain = ConversationalRetrievalChain.from_llm(
