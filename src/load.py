@@ -20,6 +20,9 @@ def load():
     enc = tiktoken.get_encoding("cl100k_base")
     tokens = sum(len(enc.encode(doc.page_content)) for doc in data)
     characters = sum(len(doc.page_content) for doc in data)
+    for doc in data:
+        if len(doc.page_content) < 1000:
+            raise Exception(f"Empty doc: {doc}")
 
     print(f"splitting {tokens} tokens ({characters} chars)")
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
