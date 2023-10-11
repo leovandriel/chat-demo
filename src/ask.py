@@ -10,8 +10,12 @@ def ask():
 
     print(f"{agent_name}: {title_prompt}\n")
 
+    streamed = False
+
     def write(token):
+        nonlocal streamed
         print(token, end="", flush=True)
+        streamed = True
 
     while True:
         question = input("You: ")
@@ -19,6 +23,8 @@ def ask():
             break
         print(f"\n{agent_name}: ", end="", flush=True)
         answer = chain(question, write)
+        if not streamed:
+            print(answer, end="")
         print("\n")
 
 
