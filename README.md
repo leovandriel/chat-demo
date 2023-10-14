@@ -23,24 +23,16 @@ Populate the document list in `documents.txt`. For example, to get urls of www.e
 
 Load documents listed in `documents.txt` and store embeddings in a Chroma vector store:
 
-    python src/load.py
+    python load.py
 
 To query the documents in CLI:
 
-    python src/ask.py
+    python ask.py
 
 To run local Streamlit app:
 
-    streamlit run src/app.py
+    streamlit run app.py
 
-To export vector store:
-
-    sqlite3 data/chroma.sqlite3 .dump > vector.sql
-
-To import vector store:
-
-    rm data/chroma.sqlite3
-    cat vector.sql | sqlite3 data/chroma.sqlite3
 
 # License
 

@@ -1,12 +1,15 @@
-import os
+"""Utility functions for the project."""
+from pathlib import Path
 
 
 def get_secret(key: str) -> str:
-    filename = f"{key}.txt"
-    if os.path.isfile(filename):
-        with open(filename) as f:
+    """Get a secret from a file."""
+    file = Path(f"{key}.txt")
+    if file.is_file():
+        with file.open() as f:
             return f.read().strip()
     else:
-        raise Exception(
-            f"Unable to find {key}.txt. Please create this file and add your secret."
+        msg = f"Unable to find {key}.txt. Please create this file and add your secret."
+        raise RuntimeError(
+            msg,
         )

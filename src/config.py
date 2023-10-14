@@ -1,5 +1,9 @@
+"""Configuration file for LLMs, promps, and application."""
+
+from pathlib import Path
+
 # Where to store the Choma document embeddings
-data_dir = "./data"
+data_dir = Path("./data")
 
 # Title tile/name shown in the chat window
 agent_name = "Paul Graham"
@@ -21,6 +25,6 @@ Provide one titled link to the most relevant source of your answer at the bottom
 
 Question: {question}
 Helpful Answer in markdown syntax:
-""".strip()
+""".strip()  # noqa: E501
 
 document_template = "Title: {title}\nContent: {page_content}\nSource: {source}"
