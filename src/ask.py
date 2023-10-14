@@ -1,4 +1,4 @@
-from config import title_prompt, agent_name
+from config import agent_name, title_prompt
 from model import load_store, setup_chain
 
 print_cost: bool = True

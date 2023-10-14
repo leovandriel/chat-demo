@@ -1,18 +1,20 @@
 import json
+from typing import Any, Callable, cast
+
 from langchain.callbacks.base import BaseCallbackHandler, Callbacks
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import (
-    ChatOpenAI,
-    ChatCohere,
     ChatAnthropic,
+    ChatCohere,
     ChatGooglePalm,
+    ChatOpenAI,
     ChatVertexAI,
 )
 from langchain.chat_models.base import BaseChatModel
 from langchain.embeddings import (
-    OpenAIEmbeddings,
     CohereEmbeddings,
     GooglePalmEmbeddings,
+    OpenAIEmbeddings,
     VertexAIEmbeddings,
 )
 from langchain.embeddings.base import Embeddings
@@ -21,13 +23,8 @@ from langchain.prompts import PromptTemplate
 from langchain.schema.vectorstore import VectorStore
 from langchain.vectorstores import Chroma
 from pydantic.v1 import SecretStr
-from typing import Callable, cast, Any
-from config import (
-    data_dir,
-    agent_skill,
-    prompt_template,
-    document_template,
-)
+
+from config import agent_skill, data_dir, document_template, prompt_template
 from util import get_secret
 
 

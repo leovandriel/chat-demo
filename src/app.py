@@ -1,8 +1,8 @@
 import streamlit as st
 from langchain.schema.vectorstore import VectorStore
+
 from config import agent_name, title_prompt
 from model import load_store, setup_chain
-
 
 st.set_page_config(page_title=agent_name, page_icon="🧠")
 
