@@ -1,6 +1,8 @@
 import streamlit as st
+from langchain.schema.vectorstore import VectorStore
 from config import agent_name, title_prompt
 from model import load_store, setup_chain
+
 
 st.set_page_config(page_title=agent_name, page_icon="🧠")
 
@@ -8,11 +10,11 @@ st.title(agent_name)
 
 
 @st.cache_resource
-def loading():
+def loading() -> VectorStore:
     return load_store()
 
 
-def add_message(role, content):
+def add_message(role: str, content: str) -> None:
     st.session_state.messages.append({"role": role, "content": content})
 
 
@@ -38,7 +40,7 @@ if question := st.chat_input():
         message_placeholder = st.empty()
         answer = ""
 
-        def add_token(token):
+        def add_token(token: str) -> None:
             global answer
             answer += token
             message_placeholder.markdown(answer)

@@ -1,10 +1,10 @@
 from config import title_prompt, agent_name
 from model import load_store, setup_chain
 
-print_cost = True
+print_cost: bool = True
 
 
-def ask():
+def ask() -> None:
     store = load_store()
     chain = setup_chain(store, streaming=True)
 
@@ -12,7 +12,7 @@ def ask():
 
     streamed = False
 
-    def write(token):
+    def write(token: str) -> None:
         nonlocal streamed
         print(token, end="", flush=True)
         streamed = True

@@ -6,10 +6,10 @@ from langchain.vectorstores import Chroma
 from config import data_dir
 from model import create_embedder
 
-chroma_file = f"{data_dir}/chroma.sqlite3"
+chroma_file: str = f"{data_dir}/chroma.sqlite3"
 
 
-def load():
+def load() -> None:
     with open("documents.txt", "r") as f:
         urls = f.read().split("\n")
     urls = [url for url in urls if url != ""]

@@ -1,7 +1,7 @@
 import os
 
 
-def get_secret(key):
+def get_secret(key: str) -> str:
     filename = f"{key}.txt"
     if os.path.isfile(filename):
         with open(filename) as f:
