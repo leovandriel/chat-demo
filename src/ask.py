@@ -5,8 +5,6 @@ import sys
 from .config import agent_name, title_prompt
 from .model import load_store, setup_chain
 
-print_cost: bool = True
-
 
 def ask() -> None:
     """Ask the agent questions and get answers."""

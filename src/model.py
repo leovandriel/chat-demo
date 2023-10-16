@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any, Callable, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from langchain.callbacks.base import BaseCallbackHandler, Callbacks
 from langchain.chains import ConversationalRetrievalChain
@@ -30,6 +30,8 @@ from .config import agent_skill, data_dir, document_template, prompt_template
 from .util import get_secret
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from langchain.chat_models.base import BaseChatModel
     from langchain.embeddings.base import Embeddings
 
@@ -131,11 +133,13 @@ def create_embedder(vendor: str, model: str) -> Embeddings:
 def load_store() -> VectorStore:
     """Load the vector store."""
     embedder = create_embedder(vendor="openai", model="text-embedding-ada-002")
-    vectorstore = Chroma(
-        embedding_function=embedder,
-        persist_directory=data_dir.as_posix(),
+    return cast(
+        VectorStore,
+        Chroma(
+            embedding_function=embedder,
+            persist_directory=data_dir.as_posix(),
+        ),
     )
-    return cast(VectorStore, vectorstore)
 
 
 class StreamHandler(BaseCallbackHandler):
@@ -156,19 +160,12 @@ class StreamHandler(BaseCallbackHandler):
         if self.callback is not None:
             self.callback(token)
 
-    def on_chat_model_start(
-        self: StreamHandler,
-        *args: Any,  # noqa: ANN401
-        **_: Any,  # noqa: ANN401
-    ) -> None:
-        """Handle the start of the chat model."""
-
 
 def setup_chain(
     vectorstore: VectorStore,
     *,
     streaming: bool,
-) -> Callable[[str, Callable[[str], None]], str]:
+) -> Callable[[str, Callable[[str], None] | None], str]:
     """Set up the chain."""
     retriever = vectorstore.as_retriever()
 
@@ -199,6 +196,7 @@ def setup_chain(
         retriever=retriever,
         memory=memory,
         return_source_documents=True,
+        return_generated_question=True,
         combine_docs_chain_kwargs={
             "prompt": prompt,
             "document_prompt": document_prompt,
@@ -206,7 +204,11 @@ def setup_chain(
     )
 
     def run(question: str, callback: Callable[[str], None] | None = None) -> str:
+        """Run the chain."""
         handler.callback = callback
-        return cast(str, chain({"question": question})["answer"])
+        result = chain({"question": question})
+        if not isinstance(result["answer"], str):
+            raise TypeError
+        return result["answer"]
 
     return run

@@ -1,4 +1,5 @@
 """Utility functions for the project."""
+
 from pathlib import Path
 
 
