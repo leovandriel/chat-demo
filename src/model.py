@@ -27,7 +27,7 @@ from langchain.vectorstores import Chroma
 from pydantic.v1 import SecretStr
 
 from .config import agent_skill, data_dir, document_template, prompt_template
-from .util import get_secret
+from .util import read_secret
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -49,7 +49,7 @@ def create_llm(
         return ChatOpenAI(
             model=model,
             temperature=temperature,
-            openai_api_key=get_secret("openai_api_key"),
+            openai_api_key=read_secret("openai_api_key"),
             streaming=streaming,
             callbacks=callbacks,
         )
@@ -57,7 +57,7 @@ def create_llm(
         return ChatCohere(
             model=model,
             temperature=temperature,
-            cohere_api_key=get_secret("cohere_api_key"),
+            cohere_api_key=read_secret("cohere_api_key"),
             streaming=streaming,
             callbacks=callbacks,
             client=None,
@@ -67,7 +67,7 @@ def create_llm(
         return ChatAnthropic(
             model_name=model,
             temperature=temperature,
-            anthropic_api_key=SecretStr(get_secret("anthropic_api_key")),
+            anthropic_api_key=SecretStr(read_secret("anthropic_api_key")),
             streaming=streaming,
             callbacks=callbacks,
         )
@@ -75,7 +75,7 @@ def create_llm(
         return ChatGooglePalm(
             model_name=model,
             temperature=temperature,
-            google_api_key=get_secret("google_api_key"),
+            google_api_key=read_secret("google_api_key"),
             callbacks=callbacks,
             client=None,
         )
@@ -84,7 +84,7 @@ def create_llm(
             Credentials,
         )
 
-        info = json.loads(get_secret("vertex_api_key"))
+        info = json.loads(read_secret("vertex_api_key"))
         return ChatVertexAI(
             model_name=model,
             temperature=temperature,
@@ -102,25 +102,25 @@ def create_embedder(vendor: str, model: str) -> Embeddings:
     if vendor == "openai":
         return OpenAIEmbeddings(
             model=model,
-            openai_api_key=get_secret("openai_api_key"),
+            openai_api_key=read_secret("openai_api_key"),
         )
     if vendor == "cohere":
         return CohereEmbeddings(
             model=model,
-            cohere_api_key=get_secret("cohere_api_key"),
+            cohere_api_key=read_secret("cohere_api_key"),
             client=None,
             async_client=None,
         )
     if vendor == "google":
         return GooglePalmEmbeddings(
             model_name=model,
-            google_api_key=get_secret("google_api_key"),
+            google_api_key=read_secret("google_api_key"),
             client=None,
         )
     if vendor == "vertex":
         from google.oauth2.service_account import Credentials
 
-        info = json.loads(get_secret("vertex_api_key"))
+        info = json.loads(read_secret("vertex_api_key"))
         return VertexAIEmbeddings(
             model_name=model,
             credentials=Credentials.from_service_account_info(info),

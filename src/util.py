@@ -3,7 +3,7 @@
 from pathlib import Path
 
 
-def get_secret(key: str) -> str:
+def read_secret(key: str) -> str:
     """Get a secret from a file."""
     file = Path(f"{key}.txt")
     if file.is_file():
