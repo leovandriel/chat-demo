@@ -1,0 +1,2 @@
+chat_completion_fn:
+  class: eval.chat_completion_fn:ChatCompletionFn

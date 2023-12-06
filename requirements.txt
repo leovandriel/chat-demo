@@ -1,6 +1,7 @@
 beautifulsoup4
 chromadb
 cohere
+evals
 google-cloud-aiplatform
 google-generativeai
 langchain

@@ -1,6 +1,6 @@
 [tool.ruff]
 select = ["ALL"]
-extend-exclude = ["tests"]
+extend-exclude = ["tests", "eval"]
 
 [mypy]
 strict = true

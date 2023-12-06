@@ -1,0 +1,10 @@
+advice:
+  id: advice.dev.v0
+  metrics: [accuracy]
+  
+advice.dev.v0:
+  class: evals.elsuite.modelgraded.classify:ModelBasedClassify
+  args:
+    modelgraded_spec: fact
+    eval_type: cot_classify
+    samples_jsonl: advice.jsonl

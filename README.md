@@ -33,6 +33,9 @@ To run local Streamlit app:
 
     streamlit run app.py
 
+To run evals:
+
+    PYTHONPATH=. OPENAI_API_KEY=$(< openai_api_key.txt) oaieval chat_completion_fn,gpt-4 advice --registry_path ./eval
 
 # License
 
